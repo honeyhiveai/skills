@@ -11,6 +11,18 @@ This repo is the public distribution point. The source-of-truth lives in HoneyHi
 
 ## Install
 
+### Devin
+
+Devin automatically discovers skills in connected repositories when they live under `.agents/skills/<skill-name>/SKILL.md`. This repository publishes the same skill content in that layout so HoneyHive skills are available across Devin sessions once the repo is connected/indexed.
+
+You can invoke the current skill with:
+
+```text
+@skills:honeyhive-instrument
+```
+
+### Other agents
+
 ```sh
 # 1. gh skill extension (see https://agentskills.io for the canonical command)
 gh extension install github.com/agentskills/gh-skill
@@ -38,7 +50,7 @@ Installs into the per-host directory for your agent (Claude Code, Copilot, Curso
 
 | Skill | What it does |
 |---|---|
-| [`honeyhive-instrument`](skills/honeyhive-instrument/SKILL.md) | Wire HoneyHive tracing into an LLM / agent / RAG application. SDK install, OTEL-compatible instrumentation, manual session/event construction (TypeScript), framework instrumentor selection (Python). |
+| [`honeyhive-instrument`](.agents/skills/honeyhive-instrument/SKILL.md) | Wire HoneyHive tracing into an LLM / agent / RAG application. SDK install, OTEL-compatible instrumentation, manual session/event construction (TypeScript), framework instrumentor selection (Python). |
 
 More skills (`honeyhive-evaluate`, `honeyhive-improve`) are in progress and will land here as their bodies are authored.
 
