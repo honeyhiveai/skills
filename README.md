@@ -15,8 +15,12 @@ This repo is the public distribution point. The source-of-truth lives in HoneyHi
 # 1. gh skill extension (see https://agentskills.io for the canonical command)
 gh extension install github.com/agentskills/gh-skill
 
-# 2. honeyhive-cli
-go install github.com/honeyhiveai/honeyhive-cli@latest
+# 2. honeyhive-cli — Homebrew (macOS, or Linux if you use Homebrew)
+brew tap honeyhiveai/tap
+brew install honeyhive
+
+# …or Linux install script (downloads the release binary, verifies SHA256, installs to /usr/local/bin)
+# See https://github.com/honeyhiveai/honeyhive-cli for the latest install command.
 
 # 3. set credentials in your env
 export HH_API_KEY="<your-project-api-key>"
