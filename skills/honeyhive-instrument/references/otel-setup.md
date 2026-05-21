@@ -2,15 +2,20 @@
 
 For Go, Rust, Java, .NET, C++, or any app with a fully bespoke OpenTelemetry setup that the Python/TS HoneyHive SDKs cannot wrap. Same shape as Python setup in spirit — early init, session-boundary placement, span capture on key steps, distributed propagation — but every hook is built from the user's existing OTel SDK rather than from the HoneyHive SDK.
 
-Assumes [`network-validation.md`](network-validation.md) has confirmed reachability and [`runtime-validation.md`](runtime-validation.md) has produced findings (`language`, `runtime_version`, `existing_otel_provider`). This file consumes those findings rather than re-detecting.
+Assumes [`network-validation.md`](../../honeyhive-cli/references/network-validation.md) has confirmed reachability and [`runtime-validation.md`](runtime-validation.md) has produced findings (`language`, `runtime_version`, `existing_otel_provider`). This file consumes those findings rather than re-detecting.
 
 > **This recipe lives here, not on docs.honeyhive.ai (yet).** Until the public integrations tab publishes a Native OTel page, this file is the source of truth for the OTLP attribute contract.
+
+## Reference docs
+
+- [Semantic-convention reference](https://docs.honeyhive.ai/v2/sdk-reference/semconv-reference)
+- [Framework attribute mapping](https://docs.honeyhive.ai/v2/sdk-reference/semconv-alignment)
 
 ## TL;DR
 
 | | Value |
 |---|---|
-| **OTLP HTTP endpoint** | `https://api.dp1.us.honeyhive.ai/opentelemetry/v1/traces` (dedicated / self-host customers use their own per-tenant host — see [`dedicated-deployments.md`](dedicated-deployments.md)) |
+| **OTLP HTTP endpoint** | `https://api.dp1.us.honeyhive.ai/opentelemetry/v1/traces` (dedicated / self-host customers use their own per-tenant host — see [`dedicated-deployments.md`](../../honeyhive-cli/references/dedicated-deployments.md)) |
 | **Auth header** | `Authorization: Bearer <PROJECT API KEY>` — keys are scoped to a single project; no per-span project routing needed |
 | **Session correlation** | Set baggage attributes (`honeyhive.session_id`, optionally `honeyhive.session_name`) at the session boundary, OR run a small custom `SpanProcessor` that stamps them at export time |
 
@@ -131,7 +136,7 @@ If the user has a propagated correlation id already, the custom span processor i
 
 Before declaring success, confirm:
 
-- OTel SDK init runs once at app startup; the OTLP exporter targets the right HoneyHive host (multi-tenant default `api.dp1.us.honeyhive.ai`, or the dedicated/self-host URL per [`dedicated-deployments.md`](dedicated-deployments.md)).
+- OTel SDK init runs once at app startup; the OTLP exporter targets the right HoneyHive host (multi-tenant default `api.dp1.us.honeyhive.ai`, or the dedicated/self-host URL per [`dedicated-deployments.md`](../../honeyhive-cli/references/dedicated-deployments.md)).
 - Authentication header uses the project API key from an env var (never a literal).
 - Session-boundary stamping is wired (Step 2) — either baggage at the boundary or a custom span processor reading a joining attribute.
 - Key processing steps are wrapped as spans with appropriate semconv attributes (Step 3).

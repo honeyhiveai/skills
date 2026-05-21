@@ -2,54 +2,48 @@
 
 HoneyHive's official [Agent Skills](https://agentskills.io) — portable, version-controlled procedural knowledge for AI coding agents.
 
-This repo is the public distribution point. The source-of-truth lives in HoneyHive's internal monorepo and syncs here automatically on release.
-
 ## Requirements
 
-- [`gh`](https://cli.github.com/) ≥ 2.91.0 with the [`gh skill`](https://agentskills.io) extension — used to install skills.
-- [`honeyhiveai/honeyhive-cli`](https://github.com/honeyhiveai/honeyhive-cli) — skill scripts (preflight check, trace check) shell out to `honeyhive` for credential validation and trace inspection.
+- [Node.js](https://nodejs.org/) 18+ — used to run the [`skills`](https://github.com/vercel-labs/skills) CLI via `npx`.
+- [`honeyhiveai/honeyhive-cli`](https://github.com/honeyhiveai/honeyhive-cli) — skill scripts shell out to `honeyhive` for credential validation, trace inspection, and resource operations.
 
 ## Install
 
 ```sh
-# 1. gh skill extension (see https://agentskills.io for the canonical command)
-gh extension install github.com/agentskills/gh-skill
-
-# 2. honeyhive-cli — Homebrew (macOS, or Linux if you use Homebrew)
+# 1. honeyhive-cli — Homebrew (macOS, or Linux if you use Homebrew)
 brew tap honeyhiveai/tap
 brew install honeyhive
 
 # …or Linux install script (downloads the release binary, verifies SHA256, installs to /usr/local/bin)
 # See https://github.com/honeyhiveai/honeyhive-cli for the latest install command.
 
-# 3. set credentials in your env
+# 2. set credentials in your env
 export HH_API_KEY="<your-project-api-key>"
 export HH_API_URL="https://api.dp1.us.honeyhive.ai"   # multi-tenant default; dedicated/self-host customers have their own
 
-# 4. healthcheck — confirms HH_API_URL is reachable and HH_API_KEY is valid
+# 3. healthcheck — confirms HH_API_URL is reachable and HH_API_KEY is valid
 honeyhive events search --filters '[]' --limit 1
+
+# 4. install HoneyHive skills
+npx skills add honeyhiveai/skills --skill '*'
 ```
 
-Then install a skill:
-
-```sh
-gh skill install honeyhiveai/skills <skill-name>
-```
-
-Installs into the per-host directory for your agent (Claude Code, Copilot, Cursor, Codex, Gemini CLI, etc.) — see `gh skill install --help` for `--agent` and `--scope` options.
+Installs into the per-agent skills directory (Cursor, Claude Code, Copilot, Codex, etc.) — see `npx skills add --help` for `--agent`, `-g`, and `--global` options.
 
 ## Skills
 
 | Skill | What it does |
 |---|---|
-| [`honeyhive-instrument`](skills/honeyhive-instrument/SKILL.md) | Wire HoneyHive tracing into an LLM / agent / RAG application. SDK install, OTEL-compatible instrumentation, manual session/event construction (TypeScript), framework instrumentor selection (Python). |
-
-More skills (`honeyhive-evaluate`, `honeyhive-improve`) are in progress and will land here as their bodies are authored.
+| [`honeyhive-cli`](skills/honeyhive-cli/SKILL.md) | Install, discover, and use the HoneyHive CLI. Shared reference for the other skills. |
+| [`honeyhive-instrument`](skills/honeyhive-instrument/SKILL.md) | Wire HoneyHive tracing into an LLM / agent / RAG application. SDK install, OTEL instrumentation, framework instrumentor selection. |
+| [`honeyhive-evaluate`](skills/honeyhive-evaluate/SKILL.md) | Set up and run HoneyHive experiments — datasets, evaluators, run comparison, and regression checks. |
+| [`honeyhive-improve`](skills/honeyhive-improve/SKILL.md) | Debug failing agent workflows using HoneyHive trace data and ship minimal, evidence-backed fixes. |
 
 ## Resources
 
 - [HoneyHive documentation](https://docs.honeyhive.ai/v2/)
 - [Agent Skills specification](https://agentskills.io/specification)
+- [`skills` CLI](https://github.com/vercel-labs/skills)
 
 ## License
 

@@ -19,18 +19,6 @@ metadata:
 
 Debug the failing part of the user's AI workflow with evidence first. Start from HoneyHive data when it exists, ask before mutating anything, propose the smallest evidence-backed fix, validate it, and stop.
 
-## Relevant v2 Docs
-
-When you need product or API documentation, prefer these v2 docs:
-
-- [Tracing Introduction](https://docs.honeyhive.ai/v2/tracing/introduction.md) and [Tracing Concepts](https://docs.honeyhive.ai/v2/tracing/concepts.md) for the trace data model
-- [Explore in UI](https://docs.honeyhive.ai/v2/tracing/ui-flows.md), [Tree View](https://docs.honeyhive.ai/v2/tracing/tree-view.md), and [Thread View](https://docs.honeyhive.ai/v2/tracing/thread-view.md) for trace inspection workflows
-- [Export Data](https://docs.honeyhive.ai/v2/tracing/query-data.md) for querying trace data outside the UI
-- [Custom Metrics](https://docs.honeyhive.ai/v2/tracing/client-side-evals.md) and [Online Evaluations](https://docs.honeyhive.ai/v2/monitoring/onlineevals.md) for understanding evaluator signals attached to traces
-- [Get session tree by session ID](https://docs.honeyhive.ai/v2/api-reference-autogen/sessions/get-session-tree-by-session-id.md) and [Query events with filters and projections](https://docs.honeyhive.ai/v2/api-reference-autogen/events/query-events-with-filters-and-projections.md) for the v2 API shape behind session and event retrieval
-- [HoneyHive CLI](https://docs.honeyhive.ai/v2/sdk-reference/cli.md) for terminal workflows
-- the matching v2 integration guide under `https://docs.honeyhive.ai/v2/integrations/` for the user's framework when the failure is framework-specific
-
 ## Phase 0 - Ask Before Acting
 
 Before changing code, prompts, dependencies, evaluators, datasets, experiment runs, or HoneyHive resources, understand the failure and get alignment.
@@ -175,6 +163,16 @@ Investigation Summary
 - Validation plan:
 - Open uncertainty:
 ```
+
+## HoneyHive UI URL patterns
+
+When linking to HoneyHive resources in output or documentation, use these URL patterns. The base is `https://app.us.honeyhive.ai` (or the customer's dedicated app host). `{project_id}` is the project's scope ID (available via `honeyhive experiments get-run` → `.evaluation.scope_id`).
+
+| Resource | URL pattern |
+|----------|-------------|
+| Experiment run | `https://app.us.honeyhive.ai/p/{project_id}/experiments/runs/{run_id}` |
+| Dataset | `https://app.us.honeyhive.ai/p/{project_id}/datasets/{dataset_id}` |
+| Session | `https://app.us.honeyhive.ai/p/{project_id}/traces/sessions?event={session_id}` |
 
 ## Gotchas
 

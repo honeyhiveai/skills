@@ -17,17 +17,7 @@ metadata:
 
 Set up the smallest useful HoneyHive experiment for the user's AI workflow: identify the target, shape or reuse a dataset, choose a compact evaluator set, run the experiment, and verify the results can be compared.
 
-## Relevant v2 Docs
-
-When you need product or API documentation, prefer these v2 docs:
-
-- [Experiments Quickstart](https://docs.honeyhive.ai/v2/introduction/experiments-quickstart.md) for the smallest end-to-end experiment setup
-- [Evaluation Introduction](https://docs.honeyhive.ai/v2/evaluation/introduction.md) for the experiments mental model
-- [Comparing Experiments](https://docs.honeyhive.ai/v2/evaluation/comparing_evals.md) for regression and baseline workflows
-- [Experiments via API](https://docs.honeyhive.ai/v2/evaluation/via-api.md) for non-Python or custom orchestration paths
-- [Datasets Introduction](https://docs.honeyhive.ai/v2/datasets/introduction.md) and [Curate from Traces](https://docs.honeyhive.ai/v2/datasets/dataset-curation.md) for dataset reuse and creation
-- [Evaluators Introduction](https://docs.honeyhive.ai/v2/evaluators/introduction.md), [Python Evaluators](https://docs.honeyhive.ai/v2/evaluators/python.md), [LLM Evaluators](https://docs.honeyhive.ai/v2/evaluators/llm.md), and [Evaluator Template List](https://docs.honeyhive.ai/v2/evaluators/evaluator-templates.md) for evaluator design
-- [HoneyHive CLI](https://docs.honeyhive.ai/v2/sdk-reference/cli.md), [SDK Overview](https://docs.honeyhive.ai/v2/sdk-reference/overview.md), [Python SDK](https://docs.honeyhive.ai/v2/sdk-reference/python-sdk-ref.md), and [TypeScript SDK](https://docs.honeyhive.ai/v2/sdk-reference/typescript-sdk-ref.md) for concrete v2 SDK and CLI surfaces
+For relevant v2 documentation links, see [references/v2-docs.md](references/v2-docs.md).
 
 ## Phase 0 - Ask Before Acting
 
@@ -67,7 +57,7 @@ Pick the smallest path that answers the user's evaluation question.
 - **Evaluation-first, partially built workflow:** Define the intended behavior and success criteria first, then create a seed dataset that describes that target behavior. Do not assume traces or production events already exist.
 - **Python target:** Use the Python SDK's experiment APIs (for example `evaluate()`) inside the user's evaluation harness. Use the HoneyHive CLI for HoneyHive resource CRUD and verification.
 - **TypeScript or non-Python target:** Prefer the HoneyHive CLI for terminal or agent-driven HoneyHive resource workflows when it exposes the needed operation. The TypeScript SDK (`@honeyhive/api-client`) and generated OpenAPI clients are also valid documented options for non-Python codebases. Build the smallest local harness that calls the target workflow and records or links results. Do not pretend Python-only helpers exist in TypeScript.
-- **CLI availability:** If `honeyhive` is not installed, ask the user before installing `@honeyhive/cli` or falling back to a non-CLI path.
+- **CLI availability:** If `honeyhive` is not installed, ask the user to install via `brew tap honeyhiveai/tap && brew install honeyhive`, or fall back to a non-CLI path.
 
 ## Phase 3 - Plan and Wait
 
@@ -86,16 +76,7 @@ If the user rejects the plan or asks for a narrower scope, revise the plan befor
 
 ## Phase 4 - Apply the Minimal Harness
 
-Use the HoneyHive CLI for HoneyHive API operations whenever the command exists.
-
-Common namespaces may include:
-
-- `honeyhive datasets`
-- `honeyhive datapoints`
-- `honeyhive experiments`
-- `honeyhive metrics` for evaluator surfaces that are still exposed as metrics
-
-The exact namespace set can vary by CLI version. Do not hardcode subcommands from memory when the CLI is available. Run `honeyhive --help` or `honeyhive <namespace> --help` to discover the exact command before using it.
+Use the HoneyHive CLI for API operations. Discover exact commands via `honeyhive --help` before use — see [honeyhive-cli](../honeyhive-cli/SKILL.md).
 
 Use SDK calls when they belong inside the user's code path or when the CLI does not expose the needed operation. For Python experiments, `evaluate()` is the preferred in-code orchestration API when it fits the target.
 
@@ -126,7 +107,23 @@ Check:
 4. **Comparison:** If there is a baseline run, an experiments comparison command works programmatically.
 5. **Local fit:** The harness calls the intended target workflow and does not require unrelated refactors.
 
-If validation fails because the app is not instrumented, the dataset shape is wrong, CLI coverage is missing, the SDK version is incompatible, or docs are incomplete, stop with a clear explanation and the next recommended step.
+If validation fails because the app is not instrumented, the dataset shape is wrong, the SDK version is incompatible, or some other user-side issue, stop with a clear explanation and the next recommended step.
+
+**Doc-gap protocol.** If validation fails due to missing CLI coverage or incomplete docs, follow the [doc-gap filing procedure](../honeyhive-cli/SKILL.md#doc-gap-filing).
+
+## CLI
+
+For CLI install, discovery, and schema introspection, see [honeyhive-cli](../honeyhive-cli/SKILL.md).
+
+## HoneyHive UI URL patterns
+
+When linking to HoneyHive resources in output or documentation, use these URL patterns. The base is `https://app.us.honeyhive.ai` (or the customer's dedicated app host). `{project_id}` is the project's scope ID (available via `honeyhive experiments get-run` → `.evaluation.scope_id`).
+
+| Resource | URL pattern |
+|----------|-------------|
+| Experiment run | `https://app.us.honeyhive.ai/p/{project_id}/experiments/runs/{run_id}` |
+| Dataset | `https://app.us.honeyhive.ai/p/{project_id}/datasets/{dataset_id}` |
+| Session | `https://app.us.honeyhive.ai/p/{project_id}/traces/sessions?event={session_id}` |
 
 ## Gotchas
 

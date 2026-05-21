@@ -1,6 +1,6 @@
 # Runtime validation (Phase 0)
 
-Once [`network-validation.md`](network-validation.md) confirms the user's credentials reach HoneyHive, the next step is to inspect the user's runtime: which language, which framework, what's already wired up, what existing tracing infrastructure exists. **Runtime validation feeds directly into Phase 1 setup** — the language-specific setup file consumes the structured findings produced here rather than re-detecting from scratch.
+Once [`network-validation.md`](../../honeyhive-cli/references/network-validation.md) confirms the user's credentials reach HoneyHive, the next step is to inspect the user's runtime: which language, which framework, what's already wired up, what existing tracing infrastructure exists. **Runtime validation feeds directly into Phase 1 setup** — the language-specific setup file consumes the structured findings produced here rather than re-detecting from scratch.
 
 ## Step 0 — Identify the right sub-tree
 
@@ -108,24 +108,13 @@ Findings to record:
 - **Real provider, exporter pointing at Datadog/New Relic/etc.** → flag for Phase 1: ask the user whether they want dual-export. Decision tree in [`co-existence.md`](co-existence.md).
 - **Real provider with a custom mutating SpanProcessor** → flag for Phase 1 to refuse dual-export (mutating processors will rewrite gen_ai/openinference attributes).
 
-## Output to Phase 1 setup
+## Output — write `state/runtime-validation.json`
 
-Phase 1 setup files (`python-setup.md` / `ts-setup.md` / `otel-setup.md`) consume the following findings:
+Write all findings to `state/runtime-validation.json` (schema: [state-spec.md](state-spec.md)). Phase 1 setup files read this file and `state/network-validation.json` rather than re-running detection.
 
-```
-subtree                = <path>
-language               = python | typescript | go | rust | java | dotnet | other
-runtime_version        = <e.g. python-3.11 / node-20 / go-1.22>
-framework              = <e.g. openai / langchain / dspy / crewai / native>
-framework_version      = <pinned version>
-instrumentor_family    = openinference | traceloop | none | conflict
-existing_hh_wiring     = <list of file:line> | none
-existing_otel_provider = none | proxy-noop | real:<vendor> | real:custom-mutating
-existing_provider_ref  = <file:line if real>
-deployment             = multi-tenant | dedicated | self-host    (from network-validation)
-```
+The state file captures: `subtree`, `entrypoint` (the main execution entry-point file — Phase 1 uses this to place tracer init and session boundaries), `language`, `runtime_version`, `framework`, `framework_version`, `instrumentor_family`, `existing_hh_wiring` (array of `{file, line, type}`), `existing_otel_provider`, `existing_provider_ref`, `conflicts`, and `validated_at`. See [state-specs/runtime-validation.json](../state-specs/runtime-validation.json) for the full JSON Schema.
 
-The Phase 1 setup file branches off these values rather than re-running detection. Surface any conflicts (multiple instrumentor families, multiple existing tracers, custom-mutating provider) before any setup work begins.
+Surface any conflicts (multiple instrumentor families, multiple existing tracers, custom-mutating provider) before any setup work begins.
 
 ## When in doubt — ask, don't infer
 

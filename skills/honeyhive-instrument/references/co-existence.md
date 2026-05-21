@@ -1,6 +1,8 @@
 # Coexisting with a non-HoneyHive `TracerProvider`
 
-`HoneyHiveTracer.init(...)` constructs an **independent** `TracerProvider` for HoneyHive — it does **not** call `trace.set_tracer_provider(...)` globally. The user's existing global provider (Datadog, New Relic, vendor-native) is untouched. There is no hijack risk.
+`HoneyHiveTracer.init(...)` constructs an **independent** `TracerProvider` for HoneyHive — it does **not** call `trace.set_tracer_provider(...)` globally. The user's existing global provider (Datadog, New Relic, vendor-native) is untouched.
+
+**Import and initialization order rule:** In dual-provider scenarios, **always import and initialize the HoneyHive tracer provider after every other tracer provider.** This guarantees HoneyHive never accidentally becomes the global provider — even if a bug or misconfiguration causes a global registration, the user's primary vendor was already set as global first and won't be displaced.
 
 The real question with a pre-existing provider is **not** "will HoneyHive conflict?" — it's **"do you want the spans currently going to the user's other vendor to ALSO go to HoneyHive?"**
 
@@ -28,7 +30,7 @@ The simplest path: HoneyHive's tracer runs alongside the existing one, doing its
 The user wants spans currently going to their other vendor to ALSO appear in HoneyHive — same auto-instrumentors, two backends. Two sub-cases:
 
 - **Provider exposes a way to add another span processor** (`add_span_processor` / `addSpanProcessor` / equivalent — most OTel SDK providers do): add a HoneyHive `BatchSpanProcessor` (with the OTLP exporter pointing at HoneyHive's collector) to the existing provider. Spans flow to both backends from the same provider. Do **not** call any global tracer-provider setter.
-- **Provider does not expose this** (some vendor-wrapped agent shims hide or lock the internal pipeline): the OTEL pipeline can't carry HoneyHive too. Fall back to **Path B's manual approach** — instrument with the HoneyHive REST API directly (`POST /session/start` to open a session, `POST /events` per model call). The user's OTEL pipeline is left untouched for their other vendor; HoneyHive runs as a parallel, non-OTEL instrumentation. Surface this as a finding so the user knows why they're not getting auto-instrumented spans on the HoneyHive side.
+- **Provider does not expose this** (some vendor-wrapped agent shims hide or lock the internal pipeline): the OTEL pipeline can't carry HoneyHive too. Fall back to the HoneyHive REST API directly — `POST /v1/sessions` to open a session, `POST /v1/events` per model call, `POST /v1/events/search` to query (see the [OpenAPI spec](https://github.com/honeyhiveai/honeyhive-openapi/blob/main/openapi.yaml) for the full v1 surface). The user's OTEL pipeline is left untouched for their other vendor; HoneyHive runs as a parallel, non-OTEL instrumentation. Surface this as a finding so the user knows why they're not getting auto-instrumented spans on the HoneyHive side.
 
 ### 3. Refuse cases
 
@@ -40,3 +42,4 @@ The user wants spans currently going to their other vendor to ALSO appear in Hon
 - **Don't wrap the user's provider in a `MultiplexingTracerProvider` that you wrote yourself.** OTEL spec doesn't define multiplexing semantics; downstream tools may treat it as a bug. Use one provider with two processors instead.
 - **Don't change the user's sampler.** If their existing provider uses `TraceIdRatioBased(0.1)`, adding HoneyHive's processor inherits that sampling. That's the correct behavior — do not "fix" it.
 - **Don't write code that globally registers HoneyHive as the source-of-truth provider** (`trace.set_tracer_provider(hh.provider)`). The SDK doesn't do this; the instrumentation layer shouldn't either.
+- **Don't import or initialize HoneyHive's tracer before the user's primary vendor.** Both import order and initialization order matter — always import and init HoneyHive last so it can never hijack the global provider, even accidentally.
