@@ -2,9 +2,40 @@
 
 For Python apps using `honeyhive` + a framework (OpenAI, Anthropic, LangChain, LlamaIndex, DSPy, CrewAI, AutoGen, Semantic Kernel, Strands, Bedrock, Google ADK, MCP, etc.).
 
-Assumes [`network-validation.md`](network-validation.md) has confirmed reachability and [`runtime-validation.md`](runtime-validation.md) has produced findings (`framework`, `framework_version`, `instrumentor_family`, `existing_hh_wiring`, `existing_otel_provider`, etc.). This file consumes those findings rather than re-detecting.
+Assumes [`network-validation.md`](../../honeyhive-cli/references/network-validation.md) has confirmed reachability and [`runtime-validation.md`](runtime-validation.md) has produced findings (`framework`, `framework_version`, `instrumentor_family`, `existing_hh_wiring`, `existing_otel_provider`, etc.). This file consumes those findings rather than re-detecting.
 
 The skill's job in Python has five parts: **(0)** translate runtime-validation findings into a concrete dependency + instrumentor decision and install only what's missing; **(1)** decide whether the user's framework needs an external instrumentor or already emits OTel natively; **(2)** put `tracer.create_session(...)` (or `acreate_session(...)`) at the right place in the user's code; **(3)** handle distributed trace propagation when the app spans services — or sidestep it via the GUID shortcut; **(4)** verify everything against the framework + app shape.
+
+## Reference docs
+
+For Python frameworks first-class on docs, pull the framework's docs page for the exact install + minimal-integration block — copy verbatim, adapt to the user's entry-point, do not paraphrase.
+
+**Integration guides:**
+
+- [Tracing quickstart](https://docs.honeyhive.ai/v2/introduction/tracing-quickstart)
+- [OpenAI](https://docs.honeyhive.ai/v2/integrations/openai)
+- [Anthropic](https://docs.honeyhive.ai/v2/integrations/anthropic)
+- [Azure OpenAI](https://docs.honeyhive.ai/v2/integrations/azure_openai)
+- [AWS Bedrock](https://docs.honeyhive.ai/v2/integrations/aws_bedrock)
+- [Gemini](https://docs.honeyhive.ai/v2/integrations/gemini)
+- [LangChain](https://docs.honeyhive.ai/v2/integrations/langchain)
+- [LangGraph](https://docs.honeyhive.ai/v2/integrations/langgraph)
+- [LiteLLM](https://docs.honeyhive.ai/v2/integrations/litellm)
+- [DSPy](https://docs.honeyhive.ai/v2/integrations/dspy)
+- [CrewAI](https://docs.honeyhive.ai/v2/integrations/crewai)
+- [AutoGen](https://docs.honeyhive.ai/v2/integrations/autogen)
+- [OpenAI Agents SDK](https://docs.honeyhive.ai/v2/integrations/openai-agents)
+- [Claude Agent SDK](https://docs.honeyhive.ai/v2/integrations/claude-agent-sdk)
+- [Google ADK](https://docs.honeyhive.ai/v2/integrations/google-adk)
+- [Pydantic AI](https://docs.honeyhive.ai/v2/integrations/pydantic-ai)
+- [Semantic Kernel](https://docs.honeyhive.ai/v2/integrations/semantic-kernel)
+- [Strands Agents](https://docs.honeyhive.ai/v2/integrations/strands)
+
+**SDK + semantic conventions:**
+
+- [Python SDK](https://docs.honeyhive.ai/v2/sdk-reference/python-sdk-ref)
+- [Semantic-convention reference](https://docs.honeyhive.ai/v2/sdk-reference/semconv-reference)
+- [Framework attribute mapping](https://docs.honeyhive.ai/v2/sdk-reference/semconv-alignment)
 
 ## Step 0 — Translate runtime-validation findings into a setup plan
 
@@ -102,7 +133,7 @@ Recommend (B) when the user has a GUID; recommend (A) when they don't and a stru
 
 Before declaring success, confirm:
 
-- `HoneyHiveTracer.init(...)` is called exactly once at process startup, with `api_key` + `project` from env vars (never literal). For dedicated/self-host, `server_url` set per [`dedicated-deployments.md`](dedicated-deployments.md).
+- `HoneyHiveTracer.init(...)` is called exactly once at process startup, with `api_key` + `project` from env vars (never literal). For dedicated/self-host, `server_url` set per [`dedicated-deployments.md`](../../honeyhive-cli/references/dedicated-deployments.md).
 - The chosen integration matches the framework's OTel story (Step 1):
   - OTel-native framework → no external instrumentor attached.
   - Non-OTel-native framework → exactly one instrumentor attached, family matches deps, `instrument(tracer_provider=tracer.provider)` called.

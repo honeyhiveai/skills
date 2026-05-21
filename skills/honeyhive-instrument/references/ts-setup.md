@@ -2,11 +2,17 @@
 
 For Node / Bun / Deno apps using `@honeyhive/api-client` (the manual session+event API).
 
-Assumes [`network-validation.md`](network-validation.md) has confirmed reachability and [`runtime-validation.md`](runtime-validation.md) has produced findings (`framework`, `existing_hh_wiring`, `existing_otel_provider`, `runtime_version`). This file consumes those findings rather than re-detecting.
+Assumes [`network-validation.md`](../../honeyhive-cli/references/network-validation.md) has confirmed reachability and [`runtime-validation.md`](runtime-validation.md) has produced findings (`framework`, `existing_hh_wiring`, `existing_otel_provider`, `runtime_version`). This file consumes those findings rather than re-detecting.
 
 > **Mental model: TS instrumentation should feel like the user added a structured logger.** A small, module-level wrapper that's easy to import from any route or service, takes the relevant correlation GUID at session start, and structures its event payloads around OpenTelemetry gen_ai semconv so existing dashboards and the success-criteria rubric grade well without per-call thinking.
 
 There is no first-party TS auto-instrumentor today. The skill's job is to author the wrapper for the user (or adapt their existing logger surface) and place its calls correctly across the request lifecycle.
+
+## Reference docs
+
+- [TypeScript SDK](https://docs.honeyhive.ai/v2/sdk-reference/typescript-sdk-ref)
+- [Semantic-convention reference](https://docs.honeyhive.ai/v2/sdk-reference/semconv-reference)
+- [Framework attribute mapping](https://docs.honeyhive.ai/v2/sdk-reference/semconv-alignment)
 
 ## Step 0 — Translate runtime-validation findings into a setup plan
 
@@ -114,7 +120,7 @@ await logger.event("calculator.evaluate", { inputs: { expression }, outputs: { r
 Before declaring success, confirm:
 
 - Exactly **one** `Client` from `@honeyhive/api-client` instantiated at module load.
-- `apiKey` from `process.env.HH_API_KEY`, never a literal. For dedicated/self-host, `baseUrl` from `process.env.HH_API_URL` per [`dedicated-deployments.md`](dedicated-deployments.md).
+- `apiKey` from `process.env.HH_API_KEY`, never a literal. For dedicated/self-host, `baseUrl` from `process.env.HH_API_URL` per [`dedicated-deployments.md`](../../honeyhive-cli/references/dedicated-deployments.md).
 - `logger.startSession(...)` (or `withSession`) is invoked at every session boundary in Step 2's table — the skill should be able to point at the exact files/lines.
 - `logger.event(...)` is called for every LLM call, tool call, and meaningful agent step — payloads structured per Step 3.
 - Async-context store (`AsyncLocalStorage` or framework-equivalent) propagates the session id across `await` boundaries; no `sessionId` argument has been threaded through user functions.
