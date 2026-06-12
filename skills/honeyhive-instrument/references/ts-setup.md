@@ -46,7 +46,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 
 const client = new Client({
   apiKey: process.env.HH_API_KEY!,
-  baseUrl: process.env.HH_API_URL,            // dedicated/self-host: set explicitly
+  dataPlaneUrl: process.env.HH_DATA_PLANE_URL, // dedicated/self-host: set explicitly
 });
 
 const sessionContext = new AsyncLocalStorage<{ sessionId: string }>();
@@ -120,7 +120,7 @@ await logger.event("calculator.evaluate", { inputs: { expression }, outputs: { r
 Before declaring success, confirm:
 
 - Exactly **one** `Client` from `@honeyhive/api-client` instantiated at module load.
-- `apiKey` from `process.env.HH_API_KEY`, never a literal. For dedicated/self-host, `baseUrl` from `process.env.HH_API_URL` per [`dedicated-deployments.md`](../../honeyhive-cli/references/dedicated-deployments.md).
+- `apiKey` from `process.env.HH_API_KEY`, never a literal. For dedicated/self-host, `dataPlaneUrl` from `process.env.HH_DATA_PLANE_URL` per [`dedicated-deployments.md`](../../honeyhive-cli/references/dedicated-deployments.md).
 - `logger.startSession(...)` (or `withSession`) is invoked at every session boundary in Step 2's table — the skill should be able to point at the exact files/lines.
 - `logger.event(...)` is called for every LLM call, tool call, and meaningful agent step — payloads structured per Step 3.
 - Async-context store (`AsyncLocalStorage` or framework-equivalent) propagates the session id across `await` boundaries; no `sessionId` argument has been threaded through user functions.

@@ -37,7 +37,7 @@ Use these instead of guessing flags or payload shapes.
 Before any skill that depends on HoneyHive, confirm the CLI is working and credentials are valid. Run these checks in order; stop on first failure.
 
 1. **CLI installed?** `honeyhive --help` must succeed. If not, install per the instructions above.
-2. **Env vars set?** `HH_API_KEY` and `HH_API_URL` must be in the environment (never hardcoded in source). If missing, direct the user to their project settings page to find both values: `https://app.us.honeyhive.ai/settings/project/keys` for multi-tenant, or `https://app.<tenant>.us.honeyhive.ai/settings/project/keys` for dedicated deployments (see [references/dedicated-deployments.md](references/dedicated-deployments.md)).
+2. **Env vars set?** `HH_API_KEY` and `HH_DATA_PLANE_URL` must be in the environment (never hardcoded in source). If missing, direct the user to their project settings page to find both values: `https://app.us.honeyhive.ai/settings/project/keys` for multi-tenant, or `https://app.<tenant>.us.honeyhive.ai/settings/project/keys` for dedicated deployments (see [references/dedicated-deployments.md](references/dedicated-deployments.md)).
 3. **API reachable?** Run a single authenticated probe:
    ```bash
    honeyhive events search --filters '[]' --limit 1 --page 1
@@ -45,7 +45,7 @@ Before any skill that depends on HoneyHive, confirm the CLI is working and crede
    A valid JSON response (array or `{"events":[...]}`) = good. An error or auth failure = stop and surface. If the CLI is not installed, fall back to curl — see [references/network-validation.md](references/network-validation.md) for the exact command and status-code table.
 On failure at any step, surface the exact error and stop. Do not proceed into skill-specific work with broken credentials or connectivity.
 
-The sanity check produces: `status` (pass/fail), `hh_api_url`, `deployment_type`, and `probe_method`. The **calling skill** decides whether and where to persist these (e.g. `honeyhive-instrument` writes `state/network-validation.json`; other skills may not need state files).
+The sanity check produces: `status` (pass/fail), `hh_data_plane_url`, `deployment_type`, and `probe_method`. The **calling skill** decides whether and where to persist these (e.g. `honeyhive-instrument` writes `state/network-validation.json`; other skills may not need state files).
 
 ## Doc-Gap Filing
 

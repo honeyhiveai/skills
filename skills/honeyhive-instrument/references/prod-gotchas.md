@@ -36,7 +36,7 @@ The SDK handles span flushing on its own — you do **not** need to recommend an
 
 ## 7. Network policy & certs
 
-- Self-hosted deployments may use a custom CA. If the user's runtime can't validate the cert, OTLP exports fail silently — the user sees no errors, just no spans appearing in the UI. Verify cert chain explicitly with `curl -v <HH_API_URL>/opentelemetry/v1/traces` before declaring success.
+- Self-hosted deployments may use a custom CA. If the user's runtime can't validate the cert, OTLP exports fail silently — the user sees no errors, just no spans appearing in the UI. Verify cert chain explicitly with `curl -v <deployment-url>/opentelemetry/v1/traces` (where `<deployment-url>` is `$HH_DATA_PLANE_URL` for TS/CLI users or `$HH_API_URL` for Python users) before declaring success.
 - Egress firewalls: the OTLP HTTP endpoint is `:443` outbound to the user's deployment host (default `api.dp1.us.honeyhive.ai`, or the customer's dedicated/self-host URL). If the user is behind a strict egress policy, surface the URL + port to their network team.
 - HTTP proxies: `HTTPS_PROXY` is honored by the default exporter, but `NO_PROXY` must include the HoneyHive domain when the proxy is corporate-only.
 
