@@ -28,7 +28,7 @@ Clarify:
 - **Target:** Which agent, function, route, notebook, or job should be evaluated? In a monorepo, identify the exact subtree before proceeding.
 - **Evaluation goal:** What regression or quality question should the experiment answer (accuracy, groundedness, tool-use success, safety, latency, cost, formatting, etc.)?
 - **Mode:** Is this an offline batch experiment, online production evaluation, or a comparison between two existing runs?
-- **HoneyHive state:** Does the user have `HH_API_KEY` set? Do they need `HH_API_URL` for a dedicated or self-hosted deployment? Only ask about an explicit project override if the user wants a non-default project target or label.
+- **HoneyHive state:** Does the user have `HH_API_KEY` set? Do they need a deployment URL set for a dedicated or self-hosted deployment (`HH_DATA_PLANE_URL` for TS/CLI users, `HH_API_URL` for Python)? Only ask about an explicit project override if the user wants a non-default project target or label.
 - **Resources:** Should the skill reuse existing datasets/evaluators/runs, or is it allowed to create new ones?
 - **Edit tolerance:** Is the user okay with code changes, dependency changes, and local commands, or do they only want a plan?
 
@@ -131,6 +131,6 @@ When linking to HoneyHive resources in output or documentation, use these URL pa
 - **Evaluators may be called metrics.** Product language says "evaluators"; API and CLI surfaces may still say `metrics`. Bridge the naming for the user.
 - **No metric sprawl.** Too many small metrics make an event hard to understand. Prefer a compact set.
 - **No hidden resource creation.** Do not create datasets, datapoints, metrics, runs, or alerts until the user approves the plan.
-- **No secret writes.** Read `HH_API_KEY` and any relevant environment settings such as `HH_API_URL` from the environment or ask the user to set them. Only ask for an explicit project override when the user needs one. Never write API keys to source files.
+- **No secret writes.** Read `HH_API_KEY` and any relevant environment settings such as the deployment URL (`HH_DATA_PLANE_URL` for TS/CLI, `HH_API_URL` for Python) from the environment or ask the user to set them. Only ask for an explicit project override when the user needs one. Never write API keys to source files.
 - **No forced instrumentation.** If the app is not instrumented, explain the tradeoff and offer an offline path or a handoff to `honeyhive-instrument`.
 - **No version upgrades by default.** If the installed SDK or CLI is incompatible, surface the issue and ask before upgrading.

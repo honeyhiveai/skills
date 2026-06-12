@@ -4,7 +4,7 @@
   "title": "NetworkValidationState",
   "description": "Output of the honeyhive-cli sanity check / network validation. Written to state/network-validation.json. Read by runtime validation and Phase 1 setup.",
   "type": "object",
-  "required": ["status", "hh_api_key_source", "hh_api_url", "deployment_type", "probe_method", "validated_at"],
+  "required": ["status", "hh_api_key_source", "hh_data_plane_url", "deployment_type", "probe_method", "validated_at"],
   "properties": {
     "status": {
       "type": "string",
@@ -16,7 +16,7 @@
       "enum": ["env", "config_file"],
       "description": "Where the key was found — env (environment variable) or config_file (~/.honeyhive/config.json)."
     },
-    "hh_api_url": {
+    "hh_data_plane_url": {
       "type": "string",
       "format": "uri",
       "description": "The validated deployment URL."

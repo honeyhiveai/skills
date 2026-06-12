@@ -7,7 +7,7 @@ This reference covers the **curl fallback** for when the HoneyHive CLI is not in
 ## Environment variables
 
 - `HH_API_KEY` — project-scoped API key. **Must come from an env var, never a literal in code.**
-- `HH_API_URL` — deployment host. Multi-tenant default: `https://api.dp1.us.honeyhive.ai`; dedicated and self-host customers have their own. See [`dedicated-deployments.md`](dedicated-deployments.md).
+- `HH_DATA_PLANE_URL` — deployment host. Multi-tenant default: `https://api.dp1.us.honeyhive.ai`; dedicated and self-host customers have their own. See [`dedicated-deployments.md`](dedicated-deployments.md).
 
 If either is missing, direct the user to https://app.us.honeyhive.ai/settings/project/keys.
 
@@ -19,7 +19,7 @@ curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
   -H "Authorization: Bearer $HH_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"filters":[],"limit":1,"page":1}' \
-  "$HH_API_URL/v1/events/search"
+  "${HH_DATA_PLANE_URL:-$HH_API_URL}/v1/events/search"
 ```
 
 Interpretation:
@@ -29,7 +29,7 @@ Interpretation:
 | `HTTP 200` | URL reachable, key valid | Proceed to Phase 0 runtime validation |
 | `HTTP 401` | URL reachable, key invalid for this deployment | Stop — the key was minted for a different workspace, or it was revoked. Ask the user to confirm key + URL came from the same deployment UI |
 | `HTTP 403` | URL reachable, key lacks scope | Stop — confirm the key is project-scoped, not personal-access |
-| `HTTP 404` | Wrong URL path or wrong host | Stop — verify `HH_API_URL` is correct (no trailing slash, correct subdomain) |
+| `HTTP 404` | Wrong URL path or wrong host | Stop — verify `HH_DATA_PLANE_URL` is correct (no trailing slash, correct subdomain) |
 | `HTTP 000` / connection error | Egress blocked, DNS failure, or wrong host entirely | Stop — surface to the user; their network team may need to allow `:443` outbound to the host |
 | `curl: (60)` SSL cert error | Self-host using a custom CA | See TLS cert chain section below |
 
@@ -40,7 +40,7 @@ Run the check exactly once. Do **not** retry on failure — surface the exact `c
 If the user is on self-host and `curl` returns SSL errors, the runtime needs a custom CA bundle:
 
 ```bash
-curl -v "$HH_API_URL/v1/events/search" 2>&1 | grep -E 'SSL|TLS|verify|certificate'
+curl -v "${HH_DATA_PLANE_URL:-$HH_API_URL}/v1/events/search" 2>&1 | grep -E 'SSL|TLS|verify|certificate'
 ```
 
 If "self signed certificate" or "unable to get local issuer certificate" appears, surface to the user. The fix depends on the deployment type:
@@ -52,7 +52,7 @@ If "self signed certificate" or "unable to get local issuer certificate" appears
 To surface the exact hostname the network team needs to inspect or whitelist:
 
 ```bash
-echo "$HH_API_URL" | sed 's|https://||'
+echo "${HH_DATA_PLANE_URL:-$HH_API_URL}" | sed 's|https://||'
 ```
 
 Give the network team that hostname so they can verify the certificate chain, add firewall rules for `:443` egress, and — if a MITM proxy is in the path — confirm which CA the proxy uses to re-sign.
@@ -66,7 +66,7 @@ Do not silently proceed with TLS verification disabled — surface as a finding 
 
 ## Common failures (and how to read them)
 
-- **401 with HH_API_URL pointing at a dedicated tenant but key minted on multi-tenant** (or vice versa). Most common cause of "I copied the snippet from docs and it doesn't work" for dedicated customers. Confirm key + URL came from the same UI.
+- **401 with HH_DATA_PLANE_URL pointing at a dedicated tenant but key minted on multi-tenant** (or vice versa). Most common cause of "I copied the snippet from docs and it doesn't work" for dedicated customers. Confirm key + URL came from the same UI.
 - **`curl` returns 200 but instrumentation later silently drops spans.** Likely a *different* env var setup at runtime than the one you tested with — check the user's process actually receives `HH_API_KEY` (e.g., docker-compose `env_file:`, k8s `envFrom:`, systemd `EnvironmentFile`). The validation curl ran in the user's shell; the app may run in a different env.
 - **403 on a key that "used to work."** Either the key was rotated and the old one is revoked, or the user's API-key role was downgraded.
 - **Connection error from inside a container/k8s pod but not from the user's laptop.** Egress policy blocks outbound `:443` to the HoneyHive host. Surface the URL + port to the user's network team; the skill can't fix this.

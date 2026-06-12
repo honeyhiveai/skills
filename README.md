@@ -38,6 +38,7 @@ Installs into the per-agent skills directory (Cursor, Claude Code, Copilot, Code
 | [`honeyhive-instrument`](skills/honeyhive-instrument/SKILL.md) | Wire HoneyHive tracing into an LLM / agent / RAG application. SDK install, OTEL instrumentation, framework instrumentor selection. |
 | [`honeyhive-evaluate`](skills/honeyhive-evaluate/SKILL.md) | Set up and run HoneyHive experiments — datasets, evaluators, run comparison, and regression checks. |
 | [`honeyhive-improve`](skills/honeyhive-improve/SKILL.md) | Debug failing agent workflows using HoneyHive trace data and ship minimal, evidence-backed fixes. |
+| [`honeyhive-alert-root-cause`](skills/honeyhive-alert-root-cause/SKILL.md) | Investigate HoneyHive Discover alert URLs — decode filters, pull flagged sessions, classify true vs false positives, and recommend guardrails. |
 
 ## Resources
 

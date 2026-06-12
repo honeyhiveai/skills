@@ -45,7 +45,7 @@ Run the reachability check:
 ```bash
 curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
   -H "Authorization: Bearer $HH_API_KEY" \
-  "$HH_API_URL/healthcheck"
+  "${HH_DATA_PLANE_URL:-$HH_API_URL}/healthcheck"
 ```
 
 **Checkpoint:** Curl returns HTTP 200. If not, stop with the exact error from the interpretation table below. Do not retry. Do not proceed.
@@ -55,7 +55,7 @@ curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
 | 200 | Valid | Proceed |
 | 401 | Key invalid for this deployment | Redirect user to project settings: https://app.us.honeyhive.ai/settings/project/keys |
 | 403 | Key lacks project scope | Redirect user to project settings: https://app.us.honeyhive.ai/settings/project/keys |
-| 404 | Wrong URL | Verify HH_API_URL, no trailing slash |
+| 404 | Wrong URL | Verify the deployment URL (`HH_DATA_PLANE_URL` for TS/CLI, `HH_API_URL` for Python), no trailing slash |
 | 000 | Egress blocked | Surface URL + port to network team |
 
 ### Step 1.2 — Runtime validation
@@ -114,7 +114,7 @@ Run the user's main entry-point with a one-line dummy prompt (if env vars are se
 Query for events using the events search endpoint:
 
 ```bash
-curl -s -X POST "$HH_API_URL/v1/events/search" \
+curl -s -X POST "${HH_DATA_PLANE_URL:-$HH_API_URL}/v1/events/search" \
   -H "Authorization: Bearer $HH_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"project": "<project-name>", "filters": [{"field": "event_type", "operator": "is", "value": "session", "type": "string"}], "limit": 5}'
@@ -123,7 +123,7 @@ curl -s -X POST "$HH_API_URL/v1/events/search" \
 Find the most recent session, then search for its child events:
 
 ```bash
-curl -s -X POST "$HH_API_URL/v1/events/search" \
+curl -s -X POST "${HH_DATA_PLANE_URL:-$HH_API_URL}/v1/events/search" \
   -H "Authorization: Bearer $HH_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"project": "<project-name>", "filters": [{"field": "session_id", "operator": "is", "value": "<session-id>", "type": "string"}], "limit": 50}'
@@ -191,7 +191,7 @@ These are hard rules. Violating any one is a skill failure that evaluators will 
 - **MUST NOT globally register HoneyHive as the source-of-truth TracerProvider.** The SDK doesn't do this; instrumentation code must not either. Evaluator: `no-global-provider-hijack`.
 - **MUST NOT construct two tracers (Python) or two Client instances (TS).** Reuse the existing instance. Evaluator: `no-dual-tracer-instances`.
 - **MUST NOT hardcode API keys.** Always sourced from env vars. Evaluator: `no-hardcoded-api-keys`.
-- **MUST NOT let HH_API_URL silently fall back to the wrong host.** Confirm the deployment URL explicitly. Multi-tenant default is `https://api.dp1.us.honeyhive.ai`; dedicated and self-host customers have their own.
+- **MUST NOT let the deployment URL silently fall back to the wrong host.** Confirm explicitly — the env var name varies by SDK (`HH_DATA_PLANE_URL` for TS/CLI, `HH_API_URL` for Python). Multi-tenant default is `https://api.dp1.us.honeyhive.ai`; dedicated and self-host customers have their own.
 - **MUST NOT switch instrumentor families** (OpenInference ↔ Traceloop) without explicit user consent.
 - **MUST NOT thread session_id through function signatures** (TS path). Use a module-level helper or async-context store.
 - **MUST NOT bump SDK or framework versions** to make instrumentation work.
