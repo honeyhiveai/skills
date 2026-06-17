@@ -11,14 +11,14 @@ description: >
   `OpenInference`/`Traceloop` instrumentors targeting HoneyHive.
 license: MIT
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
   homepage: https://docs.honeyhive.ai
   feedback_url: https://github.com/honeyhiveai/skills/issues
 ---
 
 # HoneyHive Instrument
 
-Wire HoneyHive tracing into a user's application with a small, surgical edit set: initialize the tracer, attach an instrumentor for their LLM/agent framework, and verify spans flush.
+Wire HoneyHive tracing into a user's application with a small, surgical edit set: initialize the tracer, attach an instrumentor for their LLM/agent framework, and verify spans flush and the trace is visible in HoneyHive.
 
 > **You are an instrumentation surgeon, not a rewriter.** The user has working code. Add tracing in the smallest number of edits possible. Never refactor unrelated code, never change framework versions, never strip features.
 
@@ -95,6 +95,7 @@ For frameworks with first-class docs coverage, also pull the framework's integra
 
 - **Integrations index** — <https://docs.honeyhive.ai/v2/integrations> (find the user's framework here)
 - **Tracing quickstart** — <https://docs.honeyhive.ai/v2/introduction/tracing-quickstart>
+- **Troubleshooting** — <https://docs.honeyhive.ai/v2/introduction/troubleshooting>
 - **SDK reference** — <https://docs.honeyhive.ai/v2/sdk-reference> (Python, TypeScript, semconv)
 
 **Checkpoint:** Setup reference loaded. Dependency changes proposed (not yet committed). Init placement, session boundaries, and propagation strategy decided.
@@ -129,7 +130,7 @@ curl -s -X POST "${HH_DATA_PLANE_URL:-$HH_API_URL}/v1/events/search" \
   -d '{"project": "<project-name>", "filters": [{"field": "session_id", "operator": "is", "value": "<session-id>", "type": "string"}], "limit": 50}'
 ```
 
-Verify: at least one event exists, and at least one has `event_type: "model"` (LLM span). If zero events or no model events, go back to Phase 2.
+Verify: at least one event exists, and at least one has `event_type: "model"` (LLM span). If the smoke run exits cleanly but zero events or no model events are visible, do not guess at code changes first. Consult <https://docs.honeyhive.ai/v2/introduction/troubleshooting>, then inspect env vars, dependency installation, exporter output, and shutdown behavior as applicable. Only return to Phase 2 after those checks point to instrumentation placement or instrumentor choice.
 
 ### Step 3.3 — Grade against success criteria
 
