@@ -36,6 +36,7 @@ For Python frameworks first-class on docs, pull the framework's docs page for th
 - [Python SDK](https://docs.honeyhive.ai/v2/sdk-reference/python-sdk-ref)
 - [Semantic-convention reference](https://docs.honeyhive.ai/v2/sdk-reference/semconv-reference)
 - [Framework attribute mapping](https://docs.honeyhive.ai/v2/sdk-reference/semconv-alignment)
+- [Troubleshooting](https://docs.honeyhive.ai/v2/introduction/troubleshooting)
 
 ## Step 0 — Translate runtime-validation findings into a setup plan
 
@@ -141,5 +142,7 @@ Before declaring success, confirm:
 - For multi-service apps: either propagators are set up globally (Approach A) or every service is calling `create_session(session_id=<derived from shared GUID>, skip_api_call=True)` (Approach B).
 - The SDK auto-flushes — do **not** add `tracer.force_flush()` as a general practice. The single exception is Lambda / serverless (see [`prod-gotchas.md`](prod-gotchas.md) §6).
 - Run the smoke test once with one real LLM call. Inspect the resulting trace against [`success.md`](../success.md): is the trace structure easy to debug? Are agent/tool/LLM events nested correctly? Is the user query identifiable?
+
+If the smoke run succeeds but HoneyHive shows no session or no model event, consult the [troubleshooting guide](https://docs.honeyhive.ai/v2/introduction/troubleshooting) before changing instrumentation code. Treat missing dependencies, wrong env vars, exporter failures, and process shutdown behavior as operational checks; only adjust session placement or instrumentor choice after those checks are ruled out.
 
 If the smoke trace is messy (deeply hidden LLM calls, wrong nesting, missing tool linkage), the integration is mechanically correct but qualitatively wrong — circle back and adjust the instrumentor choice or session-boundary placement.
