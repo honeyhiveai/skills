@@ -30,6 +30,33 @@ npx skills add honeyhiveai/skills --skill '*'
 
 Installs into the per-agent skills directory (Cursor, Claude Code, Copilot, Codex, etc.) — see `npx skills add --help` for `--agent`, `-g`, and `--global` options.
 
+## Install as a plugin
+
+The repository is also a plugin for coding agents. Each plugin install adds the five skills plus the HoneyHive docs MCP server (`https://docs.honeyhive.ai/mcp`).
+
+| Agent | Command or action |
+|---|---|
+| Claude Code | `/plugin install honeyhive --marketplace honeyhiveai/skills` (or `claude plugin marketplace add honeyhiveai/skills` then `claude plugin install honeyhive@honeyhive`) |
+| Codex / ChatGPT desktop | `codex plugin marketplace add honeyhiveai/skills`, then install `honeyhive` from the plugin list |
+| GitHub Copilot CLI | `copilot plugin install honeyhive@awesome-copilot` (after the listing is approved) |
+| Cursor | Install `honeyhive` from the Cursor Marketplace (after the listing is approved) |
+| Antigravity CLI | `agy plugin install https://github.com/honeyhiveai/skills` |
+| Gemini CLI | `gemini extensions install https://github.com/honeyhiveai/skills` |
+| Kiro | Powers panel, Add Custom Power, Import power from GitHub, paste `https://github.com/honeyhiveai/skills` |
+| Any agent (skills only) | `npx skills add honeyhiveai/skills --skill '*'` |
+
+## What the plugin runs and sends
+
+- **Docs MCP server:** connects to `https://docs.honeyhive.ai/mcp` (no sign-in). Tools: `search_honey_hive_ai_docs` and `query_docs_filesystem_honey_hive_ai_docs` (read-only), and `submit_feedback`, which sends documentation feedback to the HoneyHive docs site (hosted by Mintlify).
+- **Installs:** the skills may install the `honeyhive` CLI (Homebrew tap `honeyhiveai/tap` or the release install script in `honeyhiveai/honeyhive-cli`, which verifies a SHA256) and HoneyHive SDK and OpenTelemetry instrumentation packages from PyPI or npm into your project.
+- **Data:** the skills send trace, session, experiment and project data only to the HoneyHive API you set in `HH_API_URL` or `HH_DATA_PLANE_URL`, authenticated with your `HH_API_KEY`. The plugin has no hooks and runs nothing in the background.
+
+## Support and privacy
+
+- Support: [GitHub issues](https://github.com/honeyhiveai/skills/issues) or support@honeyhive.ai
+- Privacy policy: https://www.honeyhive.ai/legal/privacy-policy
+- Terms of service: https://www.honeyhive.ai/legal/terms-of-service
+
 ## Skills
 
 | Skill | What it does |

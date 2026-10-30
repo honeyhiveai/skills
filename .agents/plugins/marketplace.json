@@ -1,0 +1,20 @@
+{
+  "name": "honeyhive",
+  "interface": {
+    "displayName": "HoneyHive"
+  },
+  "plugins": [
+    {
+      "name": "honeyhive",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

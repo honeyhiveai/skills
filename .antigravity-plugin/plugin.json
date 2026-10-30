@@ -1,0 +1,29 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "honeyhive",
+  "displayName": "HoneyHive",
+  "version": "0.1.0",
+  "description": "Add HoneyHive tracing to LLM and agent apps, run evaluations, debug failing sessions from trace data, and search the HoneyHive docs.",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Add HoneyHive tracing to this app",
+    "Set up a HoneyHive experiment for this agent",
+    "Debug this failing HoneyHive session"
+  ],
+  "author": {
+    "name": "HoneyHive",
+    "url": "https://www.honeyhive.ai"
+  },
+  "homepage": "https://docs.honeyhive.ai/v2/introduction/ai-coding-agents",
+  "repository": "https://github.com/honeyhiveai/skills",
+  "license": "MIT",
+  "keywords": [
+    "honeyhive",
+    "llm",
+    "observability",
+    "tracing",
+    "evaluation",
+    "agents",
+    "opentelemetry"
+  ]
+}

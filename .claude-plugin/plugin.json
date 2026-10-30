@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "honeyhive",
+  "displayName": "HoneyHive",
+  "version": "0.1.0",
+  "description": "Skills for adding HoneyHive tracing to LLM apps, running evaluations, debugging agents from trace data, and investigating alerts, plus the HoneyHive docs MCP server. The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry instrumentation packages from PyPI or npm, and send trace and project data only to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL.",
+  "author": {
+    "name": "HoneyHive",
+    "email": "support@honeyhive.ai",
+    "url": "https://www.honeyhive.ai"
+  },
+  "homepage": "https://docs.honeyhive.ai/v2/introduction/ai-coding-agents",
+  "repository": "https://github.com/honeyhiveai/skills",
+  "license": "MIT",
+  "keywords": [
+    "honeyhive",
+    "llm",
+    "observability",
+    "tracing",
+    "evaluation",
+    "agents",
+    "opentelemetry"
+  ],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://docs.honeyhive.ai/v2/introduction/ai-coding-agents",
+  "supportUrl": "https://github.com/honeyhiveai/skills/issues",
+  "privacyPolicyUrl": "https://www.honeyhive.ai/legal/privacy-policy",
+  "termsOfServiceUrl": "https://www.honeyhive.ai/legal/terms-of-service"
+}
