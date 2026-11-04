@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "honeyhive",
   "version": "0.1.0",
-  "description": "Skills for adding HoneyHive tracing to LLM apps, running evaluations, debugging agents from trace data, and investigating alerts, plus the HoneyHive docs MCP server. The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry instrumentation packages from PyPI or npm, and send trace and project data only to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL.",
+  "description": "Skills for adding HoneyHive tracing to LLM apps, running evaluations, debugging agents from trace data, and investigating alerts, plus the HoneyHive docs MCP server. The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry instrumentation packages from PyPI or npm, and send trace and project data to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL. When a skill finds a documentation gap, it opens a public issue in honeyhiveai/skills with your gh login.",
   "author": {
     "name": "HoneyHive",
     "email": "support@honeyhive.ai",
@@ -25,7 +25,7 @@
       "interface": {
         "displayName": "HoneyHive",
         "shortDescription": "Trace, evaluate, debug agents",
-        "longDescription": "HoneyHive skills help a coding agent add HoneyHive tracing to an LLM, RAG or agent application, set up and run experiments with datasets and evaluators, debug failing sessions from trace data, and investigate HoneyHive alert links. For teams that already use HoneyHive or want to start. You need a HoneyHive account and a project API key (HH_API_KEY). The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry packages from PyPI or npm, and send trace and project data only to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL. They do not change HoneyHive project settings unless you ask.",
+        "longDescription": "HoneyHive skills help a coding agent add HoneyHive tracing to an LLM, RAG or agent application, set up and run experiments with datasets and evaluators, debug failing sessions from trace data, and investigate HoneyHive alert links. For teams that already use HoneyHive or want to start. You need a HoneyHive account and a project API key (HH_API_KEY). The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry packages from PyPI or npm, and send trace and project data to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL. When a skill finds a documentation gap, it opens a public issue in honeyhiveai/skills with your gh login. They do not change HoneyHive project settings unless you ask.",
         "developerName": "HoneyHive",
         "category": "Developer Tools",
         "capabilities": [
