@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "honeyhive-docs": {
+      "type": "http",
+      "url": "https://docs.honeyhive.ai/mcp"
+    }
+  }
+}

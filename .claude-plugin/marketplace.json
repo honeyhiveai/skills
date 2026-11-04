@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "honeyhive",
+  "description": "HoneyHive agent skills and the HoneyHive docs MCP server.",
+  "owner": {
+    "name": "HoneyHive",
+    "email": "support@honeyhive.ai",
+    "url": "https://www.honeyhive.ai"
+  },
+  "plugins": [
+    {
+      "name": "honeyhive",
+      "source": "./",
+      "description": "Add HoneyHive tracing, run evaluations, debug agents from traces, investigate alerts, and search the HoneyHive docs.",
+      "category": "monitoring",
+      "tags": [
+        "observability",
+        "tracing",
+        "evaluation"
+      ]
+    }
+  ]
+}
