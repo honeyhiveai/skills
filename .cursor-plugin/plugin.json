@@ -1,7 +1,7 @@
 {
   "name": "honeyhive",
   "version": "0.1.0",
-  "description": "Skills for adding HoneyHive tracing to LLM apps, running evaluations, debugging agents from trace data, and investigating alerts, plus the HoneyHive docs MCP server. The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry instrumentation packages from PyPI or npm, and send trace and project data to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL. When a skill finds a documentation gap, it opens a public issue in honeyhiveai/skills with your gh login.",
+  "description": "Skills for adding HoneyHive tracing to LLM apps, running evaluations, debugging agents from trace data, and investigating alerts, plus the HoneyHive docs MCP server. The skills may install the honeyhive CLI (Homebrew or a GitHub install script) and HoneyHive SDK and OpenTelemetry instrumentation packages from PyPI or npm, and send trace and project data to the HoneyHive API set in HH_API_URL or HH_DATA_PLANE_URL. When a skill finds a documentation gap, it drafts an issue for honeyhiveai/skills and files it with your gh login only if you agree.",
   "author": {
     "name": "HoneyHive",
     "email": "support@honeyhive.ai"
